@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'DaeguCatholicUniversity';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2503@1.0/DaeguCatholicUniversity.woff2') format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -24,4 +31,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* 로고 폰트 유틸리티 클래스 */
+.font-logo {
+  font-family: 'DaeguCatholicUniversity', sans-serif;
+  letter-spacing: 0.5px;
 }
