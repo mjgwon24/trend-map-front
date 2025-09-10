@@ -5,7 +5,7 @@
 // 메뉴 아이콘 크기 및 스타일 클래스
 export const getIconClasses = (isCollapsed: boolean, isSubmenu = false) => {
   if (isSubmenu) return 'hidden';
-  return `w-6 h-6 flex items-center justify-center`;
+  return `w-5 h-5 flex items-center justify-center`;
 };
 
 // 메뉴 컨테이너 스타일 클래스
