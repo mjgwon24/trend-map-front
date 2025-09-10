@@ -44,7 +44,7 @@ export default function Sidebar() {
           bg-[#121212] text-white
           flex flex-col
           transition-all duration-300 ease-in-out
-          ${isCollapsed ? 'w-18' : 'w-60'} 
+          ${isCollapsed ? 'w-20' : 'w-60'} 
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}
         >

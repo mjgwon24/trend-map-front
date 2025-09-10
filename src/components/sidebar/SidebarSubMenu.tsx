@@ -4,6 +4,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import SidebarMenuItem from "@/components/sidebar/SidebarMenuItem";
+import { getIconClasses, getSubmenuButtonClasses, getMenuContainerClasses } from '@/utils/sidebarStyles';
 
 interface SidebarSubMenuProps {
     item: MenuItem;
@@ -16,9 +17,6 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
 
     // 현재 메뉴가 활성 상태인지 확인 (하위 메뉴 중 하나가 현재 경로와 일치하는 경우)
     const hasActiveChild = item.children?.some(child => child.path === pathname);
-
-    // 접힌 상태일 때와 펼쳐진 상태일 때의 아이콘 크기 차별화
-    const iconSizeClass = 'w-5 h-5';
 
     // 애니메이션 상태를 로컬에서 관리
     const [animationState, setAnimationState] = useState({
@@ -67,22 +65,14 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
     };
 
     return (
-        <div className="px-3">
-            {/* 메뉴 헤더 - 활성 상태 표시 추가 */}
+        <div className={getMenuContainerClasses()}>
+            {/* 메뉴 헤더 */}
             <button
                 onClick={handleToggleSubmenu}
-                className={`
-                    w-full flex items-center justify-between
-                    ${isCollapsed ? 'py-3 px-0' : 'py-2 px-4'} mb-1 rounded-md
-                    ${hasActiveChild
-                    ? 'text-white bg-gray-700' // 하위 메뉴 활성 상태
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'} 
-                    transition-colors
-                    ${isCollapsed ? 'justify-center' : ''}
-                `}
+                className={getSubmenuButtonClasses(isCollapsed, !!hasActiveChild)}
             >
                 <div className="flex items-center">
-                  <span className={iconSizeClass}>
+                    <span className={getIconClasses(isCollapsed, false)}>
             {item.icon}
           </span>
 

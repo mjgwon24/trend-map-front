@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { MenuItem } from '@/types/sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { usePathname } from 'next/navigation';
+import { getIconClasses, getMenuItemClasses } from '@/utils/sidebarStyles';
 
 interface SidebarMenuItemProps {
     item: MenuItem;
@@ -12,24 +13,13 @@ export default function SidebarMenuItem({ item, isSubmenu = false }: SidebarMenu
     const { isCollapsed } = useSidebar();
     const pathname = usePathname();
 
-    const isActive = item.path && pathname === item.path;
-    const indentClass = isSubmenu ? 'pl-10' : 'pl-4';
-
-    // 접힌 상태일 때와 펼쳐진 상태일 때의 아이콘 크기 차별화
-    const iconSizeClass = 'w-5 h-5';
-
+    const isActive = !!item.path && pathname === item.path;
     return (
         <Link
             href={item.path || '#'}
-            className={`
-        flex items-center py-2 px-3 ${isCollapsed && !isSubmenu ? '' : indentClass} mb-1 rounded-md
-        ${isActive
-                ? 'bg-primary text-white' // 활성 메뉴
-                : 'text-gray-300 hover:bg-gray-800 hover:text-white transition-colors'}
-        ${isCollapsed && !isSubmenu ? 'justify-center py-3' : ''}
-      `}
+            className={getMenuItemClasses(isCollapsed, isActive, isSubmenu)}
         >
-      <span className={`${isSubmenu ? 'hidden' : iconSizeClass} flex items-center justify-center`}>
+            <span className={getIconClasses(isCollapsed, isSubmenu)}>
         {item.icon}
       </span>
 

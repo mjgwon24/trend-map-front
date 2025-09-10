@@ -1,7 +1,5 @@
 import { MenuItem } from '@/types/sidebar';
-import SidebarMenuItem from './SidebarMenuItem';
-import SidebarSubMenu from './SidebarSubMenu';
-
+import { MenuItemFactory } from '@/factories/MenuItemFactory';
 interface SidebarMenuProps {
     items: MenuItem[];
 }
@@ -12,13 +10,7 @@ export default function SidebarMenu({ items }: SidebarMenuProps) {
             <ul className="space-y-1">
                 {items.map((item) => (
                     <li key={item.id}>
-                        {item.children && item.children.length > 0 ? (
-                            <SidebarSubMenu item={item} />
-                        ) : (
-                            <div className="px-3">
-                                <SidebarMenuItem item={item} />
-                            </div>
-                        )}
+                        {MenuItemFactory.createMenuItem(item)}
                     </li>
                 ))}
             </ul>
