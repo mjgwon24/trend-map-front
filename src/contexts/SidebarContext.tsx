@@ -1,11 +1,184 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { SidebarState } from '@/types/sidebar';
+import React, { createContext, useState, useContext, useEffect, useCallback, useMemo, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { menuPathService } from '@/services/MenuPathService';
 
-const SidebarContext = createContext<SidebarState | undefined>(undefined);
+type SubmenuState = {
+  [key: string]: boolean;
+};
+
+interface SidebarContextType {
+  isCollapsed: boolean;
+  isMobileOpen: boolean;
+  expandedSubmenus: SubmenuState;
+  currentActivePath: string | null;
+  toggleCollapse: () => void;
+  toggleMobile: () => void;
+  toggleSubmenu: (id: string, forceOpen?: boolean) => void;
+  isSubmenuExpanded: (id: string) => boolean;
+  preserveSidebarState: () => void;
+}
+
+const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
+
+function useLocalStorage<T>(
+    key: string,
+    initialValue: T
+): [T, (value: T | ((val: T) => T)) => void] {
+  // 상태 초기화
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    if (typeof window === 'undefined') {
+      return initialValue;
+    }
+
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error(error);
+      return initialValue;
+    }
+  });
+
+  // localStorage 업데이트 함수
+  const setValue = (value: T | ((val: T) => T)) => {
+    try {
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return [storedValue, setValue];
+}
+
+// 하이드레이션 안전 래퍼 컴포넌트
+export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // 클라이언트 사이드 렌더링 확인
+  const [isClient, setIsClient] = useState(false);
+  const [didInitialize, setDidInitialize] = useState(false);
+
+  // 수동 토글 추적을 위한 ref
+  const manualToggleRef = useRef<boolean>(false);
+  const previousPathRef = useRef<string | null>(null);
+
+  // 하이드레이션 후에만 클라이언트 사이드 상태 활성화
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // localStorage를 사용한 사이드바 상태 관리
+  // 기본값을 true(접힌 상태)로 설정
+  const [isCollapsed, setIsCollapsed] = useLocalStorage('sidebarCollapsed', true);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [expandedSubmenus, setExpandedSubmenus] = useState<SubmenuState>({});
+  const [currentActivePath, setCurrentActivePath] = useState<string | null>(null);
+
+  // 페이지 이동 추적
+  const pathname = usePathname();
+
+  // 현재 경로 추적 및 사이드바 상태 관리
+  useEffect(() => {
+    if (!isClient) return;
+
+    // 경로가 변경된 경우에만 처리
+    if (previousPathRef.current !== pathname) {
+      setCurrentActivePath(pathname);
+      previousPathRef.current = pathname;
+
+      // 수동 토글이 아닌 경우에만 사이드바를 닫음
+      if (!manualToggleRef.current) {
+        // 페이지 이동 시 사이드바를 닫힘 상태로 변경
+        setIsCollapsed(true);
+      }
+
+      // 수동 토글 플래그 리셋
+      manualToggleRef.current = false;
+
+      // 모바일 사이드바는 항상 닫음
+      if (isMobileOpen) {
+        setIsMobileOpen(false);
+      }
+    }
+
+    // 초기화 완료 표시
+    if (!didInitialize) {
+      setDidInitialize(true);
+    }
+  }, [pathname, isClient, isMobileOpen, setIsCollapsed, didInitialize]);
+
+  // 토글 함수들
+  const toggleCollapse = useCallback(() => {
+    // 수동 토글 표시
+    manualToggleRef.current = true;
+
+    // 상태 토글
+    setIsCollapsed(prev => !prev);
+  }, [setIsCollapsed, isCollapsed]);
+
+  const toggleMobile = useCallback(() => {
+    setIsMobileOpen(prev => !prev);
+  }, []);
+
+  const toggleSubmenu = useCallback((id: string, forceOpen?: boolean) => {
+    setExpandedSubmenus(prev => {
+      const newState = forceOpen !== undefined ? forceOpen : !prev[id];
+      return { ...prev, [id]: newState };
+    });
+  }, []);
+
+  const isSubmenuExpanded = useCallback((id: string) => {
+    return !!expandedSubmenus[id];
+  }, [expandedSubmenus]);
+
+  // 상태 보존 함수
+  const preserveSidebarState = useCallback(() => {
+    manualToggleRef.current = true;
+  }, []);
+
+  // 서버 사이드 렌더링용 초기값
+  const initialContextValue = useMemo<SidebarContextType>(() => ({
+    isCollapsed: true, // 서버에서도 접힌 상태로 렌더링
+    isMobileOpen: false,
+    expandedSubmenus: {},
+    currentActivePath: null,
+    toggleCollapse: () => {},
+    toggleMobile: () => {},
+    toggleSubmenu: () => {},
+    isSubmenuExpanded: () => false,
+    preserveSidebarState: () => {}
+  }), []);
+
+  // 클라이언트 사이드 렌더링 후 실제 값 사용
+  const contextValue = useMemo<SidebarContextType>(() => (
+      isClient ? {
+        isCollapsed,
+        isMobileOpen,
+        expandedSubmenus,
+        currentActivePath,
+        toggleCollapse,
+        toggleMobile,
+        toggleSubmenu,
+        isSubmenuExpanded,
+        preserveSidebarState
+      } : initialContextValue
+  ), [
+    isClient, isCollapsed, isMobileOpen, expandedSubmenus,
+    currentActivePath, toggleCollapse, toggleMobile,
+    toggleSubmenu, isSubmenuExpanded, preserveSidebarState,
+    initialContextValue
+  ]);
+
+  return (
+      <SidebarContext.Provider value={contextValue}>
+        {children}
+      </SidebarContext.Provider>
+  );
+};
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
@@ -13,136 +186,4 @@ export const useSidebar = () => {
     throw new Error('useSidebar must be used within a SidebarProvider');
   }
   return context;
-};
-
-interface SidebarProviderProps {
-  children: ReactNode;
-}
-
-// 경로로부터 부모 메뉴 ID를 찾는 헬퍼 함수
-const findParentMenuByPath = (pathname: string, menuItems: any[]): string | null => {
-  // 메뉴 설정 파일 불러오기
-  const { mainMenuItems, bottomMenuItems } = require('@/utils/menuConfig');
-  const allMenus = [...mainMenuItems, ...bottomMenuItems];
-
-  // 하위 메뉴에서 경로 검색
-  for (const menu of allMenus) {
-    if (menu.children && menu.children.some((child: any) => child.path === pathname)) {
-      return menu.id;
-    }
-  }
-
-  return null;
-};
-
-export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children }) => {
-  const pathname = usePathname();
-  // 모바일 여부 확인
-  const [isMobile, setIsMobile] = useState(false);
-
-  // 사이드바 상태
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
-
-  // 현재 활성 경로 상태 추가
-  const [currentActivePath, setCurrentActivePath] = useState<string>(pathname || '/');
-
-  // 경로 변경 감지 및 부모 메뉴 자동 확장
-  useEffect(() => {
-    if (pathname) {
-      setCurrentActivePath(pathname);
-
-      // 현재 경로에 해당하는 모든 부모 메뉴 찾기
-      const parentMenuIds = menuPathService.getParentMenusByPath(pathname);
-
-      // 부모 메뉴들이 있다면 해당 메뉴들 확장
-      if (parentMenuIds.length > 0) {
-        setExpandedMenus(prev => {
-          // 기존 확장 메뉴와 새로운 부모 메뉴 합치기
-          const newExpandedMenus = [...prev];
-          parentMenuIds.forEach(id => {
-            if (!newExpandedMenus.includes(id)) {
-              newExpandedMenus.push(id);
-            }
-          });
-          return newExpandedMenus;
-        });
-      }
-    }
-  }, [pathname]);
-
-  // 윈도우 크기 변경 감지
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // md 브레이크포인트
-    };
-
-    // 초기 설정
-    checkMobile();
-
-    // 윈도우 크기 변경 감지
-    window.addEventListener('resize', checkMobile);
-
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
-  }, []);
-
-  // 사이드바 토글
-  const toggleCollapse = () => {
-    setIsCollapsed(prev => !prev);
-    // 모바일에서 사이드바 접을 때 하위 메뉴도 함께 닫기
-    if (isMobile) {
-      setExpandedMenus([]);
-    }
-  };
-
-  // 모바일 사이드바 토글
-  const toggleMobile = () => {
-    setIsMobileOpen(prev => !prev);
-  };
-
-  // 하위 메뉴 토글 - 수정된 버전
-  const toggleSubmenu = (id: string, forceOpen?: boolean) => {
-    setExpandedMenus(prev => {
-      // 이미 확장된 메뉴인지 확인
-      const isCurrentlyExpanded = prev.includes(id);
-
-      // forceOpen이 true면 무조건 열기
-      if (forceOpen === true) {
-        return isCurrentlyExpanded ? prev : [...prev, id];
-      }
-
-      if (isCurrentlyExpanded && !forceOpen) {
-        // 이미 열려있고 강제 오픈이 아니면 닫기
-        return prev.filter(menuId => menuId !== id);
-      } else {
-        // 새 메뉴를 열 때는 다른 메뉴를 닫고 현재 메뉴만 열기
-        return [id];
-      }
-    });
-  };
-
-  // 하위 메뉴 확장 여부 확인
-  const isSubmenuExpanded = (id: string) => {
-    return expandedMenus.includes(id);
-  };
-
-  const value: SidebarState = {
-    isCollapsed,
-    isMobileOpen,
-    expandedMenus,
-    currentActivePath,
-    toggleCollapse,
-    toggleMobile,
-    toggleSubmenu,
-    isSubmenuExpanded,
-  };
-
-  return (
-      <SidebarContext.Provider value={value}>
-        {children}
-      </SidebarContext.Provider>
-  );
 };

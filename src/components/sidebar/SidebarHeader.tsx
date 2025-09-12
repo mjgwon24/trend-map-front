@@ -1,7 +1,9 @@
+'use client';
+
 import { useSidebar } from '@/contexts/SidebarContext';
 import Logo from '@/components/common/Logo';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     getHeaderContainerClasses,
     getLogoWrapperClasses,
@@ -10,15 +12,33 @@ import {
 } from '@/utils/sidebarStyles';
 
 export default function SidebarHeader() {
-    const { isCollapsed, toggleCollapse } = useSidebar();
+    const { isCollapsed, toggleCollapse, preserveSidebarState } = useSidebar();
     const [showTooltip, setShowTooltip] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+
+    // 하이드레이션 완료 후 클라이언트 사이드 로직 활성화
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const logoSize = "md";
+
+    // 로고 클릭 핸들러
     const handleLogoClick = (e: React.MouseEvent) => {
+        if (!isMounted) return;
+
         if (isCollapsed) {
             e.preventDefault();
+            preserveSidebarState();
             toggleCollapse();
         }
+    };
+
+    // 토글 버튼 클릭 핸들러
+    const handleToggleClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        preserveSidebarState();
+        toggleCollapse();
     };
 
     return (
@@ -30,8 +50,10 @@ export default function SidebarHeader() {
                 onMouseEnter={() => isCollapsed && setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
                 aria-label={isCollapsed ? "메뉴 펼치기" : undefined}
+                role="button"
+                tabIndex={0}
             >
-                <Link href="/" onClick={e => isCollapsed && e.preventDefault()}>
+                <Link href="/" onClick={e => isCollapsed && isMounted && e.preventDefault()}>
                     <Logo
                         showText={!isCollapsed}
                         size={logoSize}
@@ -39,7 +61,7 @@ export default function SidebarHeader() {
                     />
                 </Link>
                 {/* 툴팁 */}
-                {isCollapsed && showTooltip && (
+                {isMounted && isCollapsed && showTooltip && (
                     <div className={getTooltipClasses()}>
                         Open Sidebar
                     </div>
@@ -47,9 +69,9 @@ export default function SidebarHeader() {
             </div>
 
             {/* 토글 버튼 */}
-            {!isCollapsed && (
+            {isMounted && !isCollapsed && (
                 <button
-                    onClick={toggleCollapse}
+                    onClick={handleToggleClick}
                     className={getToggleButtonClasses()}
                     aria-label="메뉴 접기"
                 >

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { MenuItem } from '@/types/sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { usePathname } from 'next/navigation';
@@ -11,44 +11,56 @@ interface SidebarSubMenuProps {
 }
 
 export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
-    const { isCollapsed, toggleSubmenu, isSubmenuExpanded, currentActivePath } = useSidebar();
+    const { isCollapsed, toggleSubmenu, isSubmenuExpanded } = useSidebar();
     const pathname = usePathname();
     const isExpanded = isSubmenuExpanded(item.id);
+    const [isMounted, setIsMounted] = useState(false);
 
-    // 현재 메뉴가 활성 상태인지 확인 (하위 메뉴 중 하나가 현재 경로와 일치하는 경우)
+    // 하이드레이션 안전장치
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    // 현재 메뉴가 활성 상태인지 확인
     const hasActiveChild = item.children?.some(child => child.path === pathname);
 
-    // 애니메이션 상태를 로컬에서 관리
+    // 애니메이션 상태 관리
     const [animationState, setAnimationState] = useState({
-        isVisible: isExpanded,
-        shouldAnimate: true
+        isVisible: false,  // 초기값을 false로 설정하여 하이드레이션 불일치 방지
+        shouldAnimate: false
     });
 
-    // 초기 및 경로 변경 시 하위 메뉴 자동 확장
+    // 초기 및 경로 변경 시 하위 메뉴 자동 확장 (클라이언트 사이드 전용)
     useEffect(() => {
-        if (hasActiveChild && !isExpanded) {
-            toggleSubmenu(item.id, true); // 강제로 열기 (다른 메뉴 닫지 않음)
-            setAnimationState({
-                isVisible: true,
-                shouldAnimate: false
-            });
-        }
-    }, [pathname, hasActiveChild, isExpanded, item.id]);
+        // 하이드레이션 이전에는 실행하지 않음
+        if (!isMounted) return;
 
-    // 확장 상태가 변경될 때 애니메이션 상태 업데이트
+        // 중요: isCollapsed가 true인 경우(사이드바가 닫힌 경우)에는
+        // 하위 메뉴 자동 확장을 하지 않도록 조건 추가
+        if (hasActiveChild && !isExpanded && !isCollapsed) {
+            // 사이드바가 열려 있을 때만 하위 메뉴 자동 확장
+            toggleSubmenu(item.id, true);
+        }
+    }, [pathname, hasActiveChild, isExpanded, item.id, isMounted, toggleSubmenu, isCollapsed]);
+
+    // 확장 상태 변경 시 애니메이션 상태 업데이트 (클라이언트 사이드 전용)
     useEffect(() => {
+        if (!isMounted) return;
+
         setAnimationState(prev => ({
             isVisible: isExpanded,
-            shouldAnimate: prev.isVisible !== isExpanded // 상태가 변경된 경우만 애니메이션 적용
+            shouldAnimate: prev.isVisible !== isExpanded
         }));
-    }, [isExpanded]);
+    }, [isExpanded, isMounted]);
 
     // 하위 메뉴 토글 핸들러
-    const handleToggleSubmenu = (e: React.MouseEvent) => {
+    const handleToggleSubmenu = useCallback((e: React.MouseEvent) => {
+        if (!isMounted) return;
+
         e.preventDefault();
         e.stopPropagation();
         toggleSubmenu(item.id);
-    };
+    }, [isMounted, toggleSubmenu, item.id]);
 
     // 애니메이션 설정
     const subMenuVariants = {
@@ -70,6 +82,7 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
             <button
                 onClick={handleToggleSubmenu}
                 className={getSubmenuButtonClasses(isCollapsed, !!hasActiveChild)}
+                data-submenu-id={item.id}
             >
                 <div className="flex items-center">
                     <span className={getIconClasses(isCollapsed, false)}>
@@ -91,14 +104,13 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
             </button>
 
             {/* 하위 메뉴 */}
-            {(isExpanded || isCollapsed) && (
+            {isMounted && (isExpanded || isCollapsed) && (
                 <motion.ul
                     key={`submenu-${item.id}`}
                     variants={subMenuVariants}
-                    initial={isExpanded ? "open" : "closed"}
+                    initial="closed"  // 초기 상태를 항상 closed로 설정
                     animate={isExpanded ? "open" : "closed"}
                     exit="closed"
-                    layout
                     className={`overflow-hidden ${isCollapsed
                         ? 'absolute left-full top-0 ml-2 bg-sidebar-bg rounded-md shadow-lg py-1 z-10'
                         : 'pl-2'}`}

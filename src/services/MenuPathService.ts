@@ -9,8 +9,16 @@ class MenuPathService {
   private menuPathMap: Map<string, string> = new Map();
   private menuParentMap: Map<string, string> = new Map();
   private allMenuItems: MenuItem[] = [];
+  private static instance: MenuPathService;
 
-  constructor() {
+  public static getInstance(): MenuPathService {
+    if (!MenuPathService.instance) {
+      MenuPathService.instance = new MenuPathService();
+    }
+    return MenuPathService.instance;
+  }
+
+  private constructor() {
     this.allMenuItems = [...mainMenuItems, ...bottomMenuItems];
     this.buildMenuMaps(this.allMenuItems);
   }
@@ -81,6 +89,17 @@ class MenuPathService {
     const menuId = this.getMenuIdByPath(path);
     return menuId ? this.menuParentMap.has(menuId) : false;
   }
+
+  /**
+   * 메뉴가 특정 경로의 하위 메뉴인지 확인
+   */
+  isChildOfPath(menuId: string, parentPath: string): boolean {
+    const parentId = this.getMenuIdByPath(parentPath);
+    if (!parentId) return false;
+
+    const parents = this.getParentChain(menuId);
+    return parents.includes(parentId);
+  }
 }
 
-export const menuPathService = new MenuPathService();
+export const menuPathService = MenuPathService.getInstance();
