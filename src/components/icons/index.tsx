@@ -66,3 +66,32 @@ export const DevelopersIcon: React.FC = () => (
         <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
     </svg>
 );
+
+export const ChartIcon: React.FC = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" className="relative z-10">
+        <rect x="3" y="12" width="4" height="9" rx="1" fill="white" opacity="0.9"/>
+        <rect x="10" y="8" width="4" height="13" rx="1" fill="white"/>
+        <rect x="17" y="4" width="4" height="17" rx="1" fill="white" opacity="0.9"/>
+        <path d="M3 3L21 3" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+    </svg>
+);
+
+export const DocumentCheckIcon: React.FC = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" className="relative z-10">
+        <rect x="5" y="3" width="14" height="18" rx="2" fill="white" opacity="0.9"/>
+        <circle cx="16" cy="16" r="5" fill="#10B981" stroke="white" strokeWidth="2"/>
+        <path d="M14 16L15.5 17.5L18.5 14.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <line x1="8" y1="7" x2="13" y2="7" stroke="#1F2937" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="8" y1="10" x2="11" y2="10" stroke="#1F2937" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+);
+
+export const CircleChartIcon: React.FC = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" className="relative z-10">
+        <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="2" opacity="0.3"/>
+        <path d="M12 3C16.9706 3 21 7.02944 21 12H12V3Z" fill="white" opacity="0.9"/>
+        <path d="M12 12L12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3V12Z" fill="white" opacity="0.6"/>
+        <circle cx="12" cy="12" r="3" fill="white"/>
+    </svg>
+);
+

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/components/common/Logo";
+import {ChartIcon, CircleChartIcon, DocumentCheckIcon} from "@/components/icons";
 
 export default function Home() {
   return (
@@ -64,7 +65,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Features Section */}
         <section className="py-16 px-6 md:px-12 lg:px-24 bg-black/30">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">
@@ -72,12 +72,11 @@ export default function Home() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Feature 1 */}
-              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
-                <div className="w-12 h-12 bg-primary-light/20 rounded-full flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                    <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                  </svg>
+              {/* Feature 1 - 일별 트렌드 랭킹 */}
+              <div className="bg-gray-700/10 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100/10 flex flex-col items-center justify-center">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-light to-primary-dark/70"></div>
+                  <ChartIcon />
                 </div>
                 <h3 className="text-xl font-bold mb-2">일별 트렌드 랭킹</h3>
                 <p className="text-gray-300">
@@ -85,12 +84,11 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Feature 2 */}
-              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
-                <div className="w-12 h-12 bg-secondary-light/20 rounded-full flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary">
-                    <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
-                  </svg>
+              {/* Feature 2 - 키워드 분석 */}
+              <div className="bg-gray-700/10 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100/10 flex flex-col items-center justify-center">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-secondary-light to-secondary-dark/70"></div>
+                  <DocumentCheckIcon />
                 </div>
                 <h3 className="text-xl font-bold mb-2">키워드 분석</h3>
                 <p className="text-gray-300">
@@ -98,14 +96,11 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Feature 3 */}
-              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
-                <div className="w-12 h-12 bg-primary-light/20 rounded-full flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                  </svg>
+              {/* Feature 3 - 맞춤형 대시보드 */}
+              <div className="bg-gray-700/10 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100/10 flex flex-col items-center justify-center">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-light to-primary-dark/70"></div>
+                  <CircleChartIcon />
                 </div>
                 <h3 className="text-xl font-bold mb-2">맞춤형 대시보드</h3>
                 <p className="text-gray-300">
@@ -115,6 +110,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
 
         {/* Platforms Section */}
         <section className="py-16 px-6 md:px-12 lg:px-24">
