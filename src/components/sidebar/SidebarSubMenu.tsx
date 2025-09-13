@@ -77,29 +77,31 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
     };
 
     return (
-        <div className={getMenuContainerClasses()}>
+        <div className={`${getMenuContainerClasses()} overflow-hidden`}>
             {/* 메뉴 헤더 */}
             <button
                 onClick={handleToggleSubmenu}
-                className={getSubmenuButtonClasses(isCollapsed, !!hasActiveChild)}
+                className={`${getSubmenuButtonClasses(isCollapsed, !!hasActiveChild)} overflow-hidden`}
                 data-submenu-id={item.id}
             >
-                <div className="flex items-center">
+                <div className="flex items-center overflow-hidden">
                     <span className={getIconClasses(isCollapsed, false)}>
             {item.icon}
           </span>
 
                     {!isCollapsed && (
-                        <span className="ml-3">{item.label}</span>
+                        <span className="ml-3 whitespace-nowrap overflow-hidden text-ellipsis">
+                            {item.label}
+                        </span>
                     )}
                 </div>
 
                 {!isCollapsed && (
-                    <span className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </span>
+                    <span className={`transform transition-transform flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </span>
                 )}
             </button>
 
@@ -108,7 +110,7 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
                 <motion.ul
                     key={`submenu-${item.id}`}
                     variants={subMenuVariants}
-                    initial="closed"  // 초기 상태를 항상 closed로 설정
+                    initial="closed"
                     animate={isExpanded ? "open" : "closed"}
                     exit="closed"
                     className={`overflow-hidden ${isCollapsed

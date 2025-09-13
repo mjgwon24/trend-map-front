@@ -44,7 +44,7 @@ export default memo(function SidebarMenuItem({ item, isSubmenu = false }: Sideba
         <Link
             href={item.path || '#'}
             onClick={handleClick}
-            className={getMenuItemClasses(isCollapsed, isActive, isSubmenu)}
+            className={`${getMenuItemClasses(isCollapsed, isActive, isSubmenu)} overflow-hidden`}
             data-itemid={item.id}
             data-active={isActive}
             // 외부 링크가 아닌 경우에만 prefetch 활성화
@@ -56,19 +56,25 @@ export default memo(function SidebarMenuItem({ item, isSubmenu = false }: Sideba
       </span>
 
             {(!isCollapsed || isSubmenu) && (
-                <span className={`ml-3 transition-opacity ${isSubmenu ? 'text-sm' : ''}`}>
-          {item.label}
-        </span>
+                <span className={`
+                    ml-3 
+                    whitespace-nowrap overflow-hidden text-ellipsis
+                    transition-opacity duration-300
+                    ${isSubmenu ? 'text-sm' : ''}
+                `}>
+                    {item.label}
+                </span>
             )}
 
             {item.badge && !isCollapsed && (
                 <span className={`
-          ml-auto px-2 py-0.5 text-xs rounded-full
-          ${item.badge.color === 'indigo' ? 'bg-primary' : `bg-${item.badge.color}`}
-          text-white
-        `}>
-          {item.badge.text}
-        </span>
+                    ml-auto px-2 py-0.5 text-xs rounded-full
+                    flex-shrink-0
+                    ${item.badge.color === 'indigo' ? 'bg-primary' : `bg-${item.badge.color}`}
+                    text-white
+                `}>
+                    {item.badge.text}
+                </span>
             )}
         </Link>
     );

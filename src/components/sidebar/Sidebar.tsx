@@ -46,11 +46,12 @@ export default function Sidebar() {
           transition-all duration-300 ease-in-out
           ${isCollapsed ? 'w-20' : 'w-60'} 
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+                overflow-hidden
         `}
         >
           <SidebarHeader />
 
-          <div className="flex-1 flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600">
+          <div className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-600">
             <div className="py-2">
               <SidebarMenu items={mainMenuItems} />
             </div>

@@ -41,17 +41,20 @@ export default function Logo({
     const { width, height, textSize } = dimensions[size];
 
     return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center">
             <Image
                 src="/logo/trend-map-logo-pink.svg"
                 alt="Trend Map"
                 width={width}
                 height={height}
+                className="flex-shrink-0"
             />
             {showText && (
-                <h1 className={`${textSize} font-logo ${colorClasses[textColor]} ${weightClasses[fontWeight]}`}>
-                    Trend Map
-                </h1>
+                <div className="ml-2 overflow-hidden whitespace-nowrap">
+                    <h1 className={`${textSize} font-logo ${colorClasses[textColor]} ${weightClasses[fontWeight]}`}>
+                        Trend Map
+                    </h1>
+                </div>
             )}
         </div>
     );

@@ -42,10 +42,10 @@ export default function SidebarHeader() {
     };
 
     return (
-        <div className={getHeaderContainerClasses(isCollapsed)}>
+        <div className={`${getHeaderContainerClasses(isCollapsed)} overflow-hidden`}>
             {/* 로고 영역 */}
             <div
-                className={getLogoWrapperClasses(isCollapsed)}
+                className={`${getLogoWrapperClasses(isCollapsed)} overflow-hidden`}
                 onClick={handleLogoClick}
                 onMouseEnter={() => isCollapsed && setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
