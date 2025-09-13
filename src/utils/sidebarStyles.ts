@@ -34,8 +34,12 @@ export const getSubmenuButtonClasses = (
   const paddingClasses = isCollapsed
       ? "py-3 justify-center"
       : "py-2 px-4 justify-between";
+
+  // 하위 메뉴가 활성화된 경우 상위 메뉴도 활성화 스타일 적용
   const stateClasses = hasActiveChild
-      ? "text-white bg-gray-700"
+      ? isCollapsed
+          ? "text-white bg-primary" // 사이드바 닫혔을 때는 primary 색상으로 표시
+          : "text-white bg-gray-700" // 사이드바 열렸을 때는 기존 스타일 유지
       : "text-gray-300 hover:bg-gray-800 hover:text-white";
 
   return `${baseClasses} ${paddingClasses} ${stateClasses}`;

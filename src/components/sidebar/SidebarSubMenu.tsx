@@ -5,14 +5,25 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import SidebarMenuItem from "@/components/sidebar/SidebarMenuItem";
 import { getIconClasses, getSubmenuButtonClasses, getMenuContainerClasses } from '@/utils/sidebarStyles';
+import { menuPathService } from '@/services/MenuPathService';
 
 interface SidebarSubMenuProps {
     item: MenuItem;
 }
 
 export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
-    const { isCollapsed, toggleSubmenu, isSubmenuExpanded } = useSidebar();
+    const { isCollapsed, toggleCollapse, toggleSubmenu, isSubmenuExpanded, preserveSidebarState } = useSidebar();
     const pathname = usePathname();
+
+    // 현재 경로가 이 메뉴의 하위 경로인지 확인
+    const isCurrentPathInSubmenu = item.children?.some(child =>
+        child.path === pathname ||
+        (child.children && menuPathService.isChildOfPath(menuPathService.getMenuIdByPath(pathname) || '', child.path || ''))
+    );
+
+    // 현재 메뉴가 활성 상태인지 확인 - 하위 메뉴 중 하나라도 활성화되었는지 확인
+    const hasActiveChild = isCurrentPathInSubmenu;
+
     const isExpanded = isSubmenuExpanded(item.id);
     const [isMounted, setIsMounted] = useState(false);
 
@@ -21,12 +32,9 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
         setIsMounted(true);
     }, []);
 
-    // 현재 메뉴가 활성 상태인지 확인
-    const hasActiveChild = item.children?.some(child => child.path === pathname);
-
     // 애니메이션 상태 관리
     const [animationState, setAnimationState] = useState({
-        isVisible: false,  // 초기값을 false로 설정하여 하이드레이션 불일치 방지
+        isVisible: false,
         shouldAnimate: false
     });
 
@@ -59,8 +67,21 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
 
         e.preventDefault();
         e.stopPropagation();
-        toggleSubmenu(item.id);
-    }, [isMounted, toggleSubmenu, item.id]);
+
+        // 사이드바가 닫혀있을 때는 사이드바를 열고 해당 메뉴를 펼침
+        if (isCollapsed) {
+            preserveSidebarState(); // 수동 토글 상태 유지
+            toggleCollapse(); // 사이드바 열기
+
+            // 사이드바가 열린 후 메뉴 펼치기 (약간의 지연 추가)
+            setTimeout(() => {
+                toggleSubmenu(item.id, true);
+            }, 50);
+        } else {
+            // 사이드바가 열려있을 때는 기존처럼 메뉴 토글
+            toggleSubmenu(item.id);
+        }
+    }, [isMounted, toggleSubmenu, item.id, isCollapsed, toggleCollapse, preserveSidebarState]);
 
     // 애니메이션 설정
     const subMenuVariants = {
@@ -83,6 +104,8 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
                 onClick={handleToggleSubmenu}
                 className={`${getSubmenuButtonClasses(isCollapsed, !!hasActiveChild)} overflow-hidden`}
                 data-submenu-id={item.id}
+                aria-expanded={isExpanded}
+                aria-controls={`submenu-${item.id}`}
             >
                 <div className="flex items-center overflow-hidden">
                     <span className={getIconClasses(isCollapsed, false)}>
@@ -108,6 +131,7 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
             {/* 하위 메뉴 */}
             {isMounted && (isExpanded || isCollapsed) && (
                 <motion.ul
+                    id={`submenu-${item.id}`}
                     key={`submenu-${item.id}`}
                     variants={subMenuVariants}
                     initial="closed"
