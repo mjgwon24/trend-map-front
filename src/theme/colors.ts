@@ -31,6 +31,11 @@ export interface ThemeColors {
   background: {
     light: string;
     dark: string;
+    gradient: {
+      start: string;
+      middle: string;
+      end: string;
+    };
   };
   text: {
     primary: string;
@@ -106,6 +111,11 @@ const colors: ThemeColors = {
   background: {
     light: '#ffffff',
     dark: '#121212',
+    gradient: {
+      start: '#412829',
+      middle: '#221C1D',
+      end: '#191616',
+    }
   },
   text: {
     primary: '#ffffff',
@@ -119,25 +129,30 @@ export default colors;
 // CSS 변수 생성을 위한 유틸리티
 export function generateCssVariables(colors: ThemeColors): Record<string, string> {
   const variables: Record<string, string> = {};
-  
+
   // 기본 변수
   variables['--background'] = colors.background.light;
   variables['--foreground'] = '#000000';
-  
+
   // 브랜드 색상
   variables['--color-primary'] = colors.primary.DEFAULT;
   variables['--color-primary-light'] = colors.primary.light;
   variables['--color-primary-dark'] = colors.primary.dark;
-  
+
   variables['--color-secondary'] = colors.secondary.DEFAULT;
   variables['--color-secondary-light'] = colors.secondary.light;
   variables['--color-secondary-dark'] = colors.secondary.dark;
-  
+
   // 상태 색상
   variables['--color-success'] = colors.success.DEFAULT || '';
   variables['--color-warning'] = colors.warning.DEFAULT || '';
   variables['--color-error'] = colors.error.DEFAULT || '';
-  
+
+  // 배경 그라데이션
+  variables['--bg-gradient-start'] = colors.background.gradient.start;
+  variables['--bg-gradient-middle'] = colors.background.gradient.middle;
+  variables['--bg-gradient-end'] = colors.background.gradient.end;
+
   return variables;
 }
 
@@ -157,8 +172,8 @@ export function generateTailwindColors(colors: ThemeColors): Record<string, any>
       light: colors.primary.light,
       dark: colors.primary.dark,
       ...Object.fromEntries(
-        Object.entries(colors.primary)
-          .filter(([key]) => !isNaN(Number(key)))
+          Object.entries(colors.primary)
+              .filter(([key]) => !isNaN(Number(key)))
       ),
     },
     secondary: {
@@ -166,8 +181,8 @@ export function generateTailwindColors(colors: ThemeColors): Record<string, any>
       light: colors.secondary.light,
       dark: colors.secondary.dark,
       ...Object.fromEntries(
-        Object.entries(colors.secondary)
-          .filter(([key]) => !isNaN(Number(key)))
+          Object.entries(colors.secondary)
+              .filter(([key]) => !isNaN(Number(key)))
       ),
     },
     success: {
@@ -186,12 +201,15 @@ export function generateTailwindColors(colors: ThemeColors): Record<string, any>
       dark: colors.error.dark,
     },
     gray: Object.fromEntries(
-      Object.entries(colors.gray)
-        .filter(([_, value]) => value !== undefined)
+        Object.entries(colors.gray)
+            .filter(([_, value]) => value !== undefined)
     ),
     sidebar: colors.sidebar,
     // background와 foreground는 CSS 변수 사용
-    background: "var(--background)",
+    background: {
+      ...colors.background,
+      DEFAULT: "var(--background)",
+    },
     foreground: "var(--foreground)",
   };
 }
@@ -215,6 +233,7 @@ export function generateThemeColors(colors: ThemeColors) {
       dark: colors.background.dark,
       light: colors.background.light,
       sidebar: colors.sidebar.bg,
+      gradient: colors.background.gradient,
     },
     text: colors.text,
     action: {
@@ -229,10 +248,10 @@ export function generateThemeColors(colors: ThemeColors) {
 function hexToRgb(hex: string): string {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!result) return '0, 0, 0';
-  
+
   const r = parseInt(result[1], 16);
   const g = parseInt(result[2], 16);
   const b = parseInt(result[3], 16);
-  
+
   return `${r}, ${g}, ${b}`;
 }
