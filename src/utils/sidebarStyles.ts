@@ -5,7 +5,11 @@
 // 메뉴 아이콘 크기 및 스타일 클래스
 export const getIconClasses = (isCollapsed: boolean, isSubmenu = false) => {
   if (isSubmenu) return 'hidden';
-  return `w-5 h-5 flex items-center justify-center flex-shrink-0`;
+
+  // 사이드바 닫힘 상태에서는 아이콘을 중앙에 배치
+  return isCollapsed
+      ? `w-5 h-5 flex items-center justify-center flex-shrink-0 mx-auto`
+      : `w-5 h-5 flex items-center justify-center flex-shrink-0`;
 };
 
 // 메뉴 컨테이너 스타일 클래스
@@ -15,9 +19,12 @@ export const getMenuItemClasses = (
     isSubmenu = false
 ) => {
   const baseClasses = "flex items-center rounded-md mb-1 transition-colors";
+
+  // 사이드바 닫힘 상태에서는 패딩 조정
   const paddingClasses = isCollapsed && !isSubmenu
-      ? "py-3 justify-center"
+      ? "px-1"
       : `py-3 ${isSubmenu ? 'pl-10' : 'pl-4'} pr-3`;
+
   const stateClasses = isActive
       ? "bg-primary text-white"
       : "text-gray-300 hover:bg-gray-800 hover:text-white";
@@ -31,8 +38,10 @@ export const getSubmenuButtonClasses = (
     hasActiveChild: boolean
 ) => {
   const baseClasses = "w-full flex items-center rounded-md mb-1 transition-colors";
+
+  // 사이드바 닫힘 상태에서는 수직 레이아웃으로 변경
   const paddingClasses = isCollapsed
-      ? "py-3 justify-center"
+      ? "py-2 px-1 flex-col justify-center"
       : "py-2 px-4 justify-between";
 
   // 하위 메뉴가 활성화된 경우 상위 메뉴도 활성화 스타일 적용

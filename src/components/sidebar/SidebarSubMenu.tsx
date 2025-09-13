@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import SidebarMenuItem from "@/components/sidebar/SidebarMenuItem";
 import { getIconClasses, getSubmenuButtonClasses, getMenuContainerClasses } from '@/utils/sidebarStyles';
-import { menuPathService } from '@/services/MenuPathService';
 
 interface SidebarSubMenuProps {
     item: MenuItem;
@@ -14,16 +13,6 @@ interface SidebarSubMenuProps {
 export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
     const { isCollapsed, toggleCollapse, toggleSubmenu, isSubmenuExpanded, preserveSidebarState } = useSidebar();
     const pathname = usePathname();
-
-    // 현재 경로가 이 메뉴의 하위 경로인지 확인
-    const isCurrentPathInSubmenu = item.children?.some(child =>
-        child.path === pathname ||
-        (child.children && menuPathService.isChildOfPath(menuPathService.getMenuIdByPath(pathname) || '', child.path || ''))
-    );
-
-    // 현재 메뉴가 활성 상태인지 확인 - 하위 메뉴 중 하나라도 활성화되었는지 확인
-    const hasActiveChild = isCurrentPathInSubmenu;
-
     const isExpanded = isSubmenuExpanded(item.id);
     const [isMounted, setIsMounted] = useState(false);
 
@@ -31,6 +20,9 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
     useEffect(() => {
         setIsMounted(true);
     }, []);
+
+    // 현재 메뉴가 활성 상태인지 확인
+    const hasActiveChild = item.children?.some(child => child.path === pathname);
 
     // 애니메이션 상태 관리
     const [animationState, setAnimationState] = useState({
@@ -107,13 +99,30 @@ export default function SidebarSubMenu({ item }: SidebarSubMenuProps) {
                 aria-expanded={isExpanded}
                 aria-controls={`submenu-${item.id}`}
             >
-                <div className="flex items-center overflow-hidden">
-                    <span className={getIconClasses(isCollapsed, false)}>
-            {item.icon}
-          </span>
-
+                {/* 아이콘과 라벨을 수직으로 배치 (사이드바 닫힘 상태) */}
+                <div className={`
+                    flex ${isCollapsed ? 'flex-col items-center' : 'items-center'} 
+                    overflow-hidden
+                `}>
+                    <span className={`
+                        ${getIconClasses(isCollapsed, false)}
+                        ${isCollapsed ? 'mb-1' : ''}
+                    `}>
+                        {item.icon}
+                        </span>
                     {!isCollapsed && (
                         <span className="ml-3 whitespace-nowrap overflow-hidden text-ellipsis">
+                            {item.label}
+                        </span>
+                    )}
+
+                    {/* 사이드바 닫힘 상태에서 아이콘 아래에 작은 라벨 표시 */}
+                    {isCollapsed && (
+                        <span className="
+                            text-[9px] text-center w-full font-bold
+                            whitespace-nowrap overflow-hidden text-ellipsis
+                            px-0.5 leading-tight
+                        ">
                             {item.label}
                         </span>
                     )}

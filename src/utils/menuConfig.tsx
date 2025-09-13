@@ -16,13 +16,13 @@ export type UserRole = 'guest' | 'user' | 'premium' | 'admin';
 export const mainMenuItems: MenuItem[] = [
   {
     id: 'dashboard',
-    label: 'Dashboard',
+    label: 'Board',
     icon: <DashboardIcon />,
     path: '/dashboard',
   },
   {
     id: 'trend-ranking',
-    label: 'Trend Ranking',
+    label: 'Ranking',
     icon: <TrendRankingIcon />,
     children: [
       {
@@ -39,13 +39,13 @@ export const mainMenuItems: MenuItem[] = [
   },
   {
     id: 'keyword-analysis',
-    label: 'Keyword Analysis',
+    label: 'Keyword',
     icon: <KeywordAnalysisIcon />,
     path: '/keyword-analysis',
   },
   {
     id: 'developers',
-    label: 'Developers',
+    label: 'Developer',
     icon: <DevelopersIcon />,
     path: '/developers',
   },
@@ -60,7 +60,7 @@ export const bottomMenuItems: MenuItem[] = [
   },
   {
     id: 'help',
-    label: 'Help & Support',
+    label: 'Help',
     icon: <HelpIcon />,
     path: '/help',
   },

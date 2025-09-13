@@ -44,17 +44,25 @@ export default memo(function SidebarMenuItem({ item, isSubmenu = false }: Sideba
         <Link
             href={item.path || '#'}
             onClick={handleClick}
-            className={`${getMenuItemClasses(isCollapsed, isActive, isSubmenu)} overflow-hidden`}
+            className={`
+                ${getMenuItemClasses(isCollapsed, isActive, isSubmenu)} 
+                overflow-hidden
+                ${isCollapsed && !isSubmenu ? 'flex-col h-auto py-2' : ''}
+            `}
             data-itemid={item.id}
             data-active={isActive}
             // 외부 링크가 아닌 경우에만 prefetch 활성화
             prefetch={item.path && !item.path.startsWith('http') ? true : false}
             replace={false} // 페이지 이력 보존
         >
-            <span className={getIconClasses(isCollapsed, isSubmenu)}>
-        {item.icon}
-      </span>
+                <span className={`
+                ${getIconClasses(isCollapsed, isSubmenu)}
+                ${isCollapsed && !isSubmenu ? 'mb-1' : ''}
+                `}>
+                {item.icon}
+                </span>
 
+            {/* 사이드바 열린 상태 또는 서브메뉴일 때 기존 스타일 적용 */}
             {(!isCollapsed || isSubmenu) && (
                 <span className={`
                     ml-3 
@@ -62,6 +70,18 @@ export default memo(function SidebarMenuItem({ item, isSubmenu = false }: Sideba
                     transition-opacity duration-300
                     ${isSubmenu ? 'text-sm' : ''}
                 `}>
+                    {item.label}
+                </span>
+            )}
+
+            {/* 사이드바 닫힌 상태에서 아이콘 아래에 작은 라벨 표시 */}
+            {isCollapsed && !isSubmenu && (
+                <span className="
+                    text-[9px] text-center w-full font-bold
+                    whitespace-nowrap overflow-hidden text-ellipsis
+                    px-0.5 leading-tight
+                    transition-opacity duration-300
+                ">
                     {item.label}
                 </span>
             )}
