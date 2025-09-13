@@ -1,12 +1,12 @@
 import { MenuItem } from '@/types/sidebar';
 import {
   AnalyticsIcon,
-  CommunityIcon, DashboardIcon,
+  DashboardIcon,
   HelpIcon,
-  MarketIcon,
-  PortfolioIcon,
   SettingsIcon,
-  WalletIcon
+  TrendRankingIcon,
+  KeywordAnalysisIcon,
+  DevelopersIcon
 } from "@/components/icons";
 import React from "react";
 
@@ -21,50 +21,33 @@ export const mainMenuItems: MenuItem[] = [
     path: '/dashboard',
   },
   {
-    id: 'market',
-    label: 'Market Summary',
-    icon: <MarketIcon />,
-    path: '/market',
-  },
-  {
-    id: 'portfolio',
-    label: 'Portfolio',
-    icon: <PortfolioIcon />,
+    id: 'trend-ranking',
+    label: 'Trend Ranking',
+    icon: <TrendRankingIcon />,
     children: [
       {
-        id: 'stocks',
-        label: 'Stocks',
-        path: '/portfolio/stocks',
+        id: 'daily-trend-ranking',
+        label: 'Daily Trend Rankings',
+        path: '/trend-ranking/daily',
       },
       {
-        id: 'bonds',
-        label: 'Bonds',
-        path: '/portfolio/bonds',
-      },
-      {
-        id: 'mutual-funds',
-        label: 'Mutual Funds',
-        path: '/portfolio/mutual-funds',
+        id: 'trend-detail',
+        label: 'Trends Detail',
+        path: '/trend-ranking/detail',
       },
     ],
   },
   {
-    id: 'analytics',
-    label: 'Analytics',
-    icon: <AnalyticsIcon />,
-    path: '/analytics',
+    id: 'keyword-analysis',
+    label: 'Keyword Analysis',
+    icon: <KeywordAnalysisIcon />,
+    path: '/keyword-analysis',
   },
   {
-    id: 'wallet',
-    label: 'Wallet',
-    icon: <WalletIcon />,
-    path: '/wallet',
-  },
-  {
-    id: 'community',
-    label: 'Community',
-    icon: <CommunityIcon />,
-    path: '/community',
+    id: 'developers',
+    label: 'Developers',
+    icon: <DevelopersIcon />,
+    path: '/developers',
   },
 ];
 
