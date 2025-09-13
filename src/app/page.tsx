@@ -4,21 +4,24 @@ import Logo from "@/components/common/Logo";
 
 export default function Home() {
   return (
-      <div className="min-h-screen bg-radial-gradient text-white">
+      <div className="min-h-screen bg-radial-gradient text-white w-full">
         {/* Hero Section */}
         <section className="relative pt-24 pb-16 px-6 md:px-12 lg:px-24">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="space-y-8">
+              <div className="space-y-6 lg:space-y-8">
                 <Logo
                     showText={true}
                     size={"lg"}
                     fontWeight="bold"
                 />
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                  <span className="text-primary-DEFAULT">트렌드</span>를 한눈에,<br />
-                  <span className="text-secondary-DEFAULT">아이디어</span>는 빠르게
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-6 md:leading-8 lg:leading-10">
+                  <div className="flex flex-col space-y-4">
+                    <span className="block">트렌드를 한눈에,</span>
+                    <span className="block">아이디어는 빠르게</span>
+                  </div>
                 </h1>
+
                 <p className="text-lg md:text-xl text-gray-300 max-w-lg">
                   글로벌/국내 주요 플랫폼의 인기 검색어, 영상, 뉴스, 커뮤니티 이슈를
                   매일 업데이트되는 트렌드 랭킹으로 확인하세요.
@@ -26,7 +29,7 @@ export default function Home() {
                 <div className="flex flex-wrap gap-4">
                   <Link
                       href="/trend-ranking/daily"
-                      className="px-6 py-3 bg-primary-DEFAULT hover:bg-primary-dark text-white rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl flex items-center gap-2"
+                      className="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold transition-colors shadow-lg hover:shadow-xl flex items-center gap-2"
                   >
                     <span>트렌드 랭킹 보기</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -36,13 +39,14 @@ export default function Home() {
                   </Link>
                   <Link
                       href="/keyword-analysis"
-                      className="px-6 py-3 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-lg font-medium transition-colors"
+                      className="px-6 py-3 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-lg font-semibold transition-colors"
                   >
                     키워드 분석하기
                   </Link>
                 </div>
               </div>
-              <div className="relative h-64 md:h-96 lg:h-[500px]">
+
+              <div className="relative h-[400px] lg:h-[500px]">
                 <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br rounded-2xl overflow-hidden">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Image
@@ -64,14 +68,14 @@ export default function Home() {
         <section className="py-16 px-6 md:px-12 lg:px-24 bg-black/30">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">
-              <span className="text-primary-DEFAULT">트렌드맵</span>으로 무엇을 할 수 있나요?
+              <span className="text-primary">트렌드맵</span>으로 무엇을 할 수 있나요?
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Feature 1 */}
               <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
                 <div className="w-12 h-12 bg-primary-light/20 rounded-full flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-DEFAULT">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
                     <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                   </svg>
                 </div>
@@ -84,7 +88,7 @@ export default function Home() {
               {/* Feature 2 */}
               <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
                 <div className="w-12 h-12 bg-secondary-light/20 rounded-full flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary-DEFAULT">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary">
                     <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
                   </svg>
                 </div>
@@ -97,7 +101,7 @@ export default function Home() {
               {/* Feature 3 */}
               <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
                 <div className="w-12 h-12 bg-primary-light/20 rounded-full flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-DEFAULT">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
                     <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                     <line x1="8" y1="21" x2="16" y2="21"></line>
                     <line x1="12" y1="17" x2="12" y2="21"></line>
@@ -148,14 +152,14 @@ export default function Home() {
         <section className="py-16 px-6 md:px-12 lg:px-24 bg-black/30">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">
-              이런 분들에게 <span className="text-primary-DEFAULT">추천</span>합니다
+              이런 분들에게 <span className="text-primary">추천</span>합니다
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* User Type 1 */}
               <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
                 <h3 className="text-xl font-bold mb-4 flex items-center">
-                  <span className="w-8 h-8 bg-primary-light/20 rounded-full flex items-center justify-center mr-2 text-primary-DEFAULT">1</span>
+                  <span className="w-8 h-8 bg-primary-light/20 rounded-full flex items-center justify-center mr-2 text-primary">1</span>
                   창업·마케팅·콘텐츠 기획자
                 </h3>
                 <p className="text-gray-300">
@@ -166,7 +170,7 @@ export default function Home() {
               {/* User Type 2 */}
               <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
                 <h3 className="text-xl font-bold mb-4 flex items-center">
-                  <span className="w-8 h-8 bg-secondary-light/20 rounded-full flex items-center justify-center mr-2 text-secondary-DEFAULT">2</span>
+                  <span className="w-8 h-8 bg-secondary-light/20 rounded-full flex items-center justify-center mr-2 text-secondary">2</span>
                   트렌드에 민감한 일반인
                 </h3>
                 <p className="text-gray-300">
@@ -177,7 +181,7 @@ export default function Home() {
               {/* User Type 3 */}
               <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
                 <h3 className="text-xl font-bold mb-4 flex items-center">
-                  <span className="w-8 h-8 bg-primary-light/20 rounded-full flex items-center justify-center mr-2 text-primary-DEFAULT">3</span>
+                  <span className="w-8 h-8 bg-primary-light/20 rounded-full flex items-center justify-center mr-2 text-primary">3</span>
                   투자자·리서처
                 </h3>
                 <p className="text-gray-300">
@@ -189,7 +193,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 px-6 md:px-12 lg:px-24 bg-gradient-to-r from-primary-DEFAULT to-secondary-DEFAULT text-white">
+        <section className="py-16 px-6 md:px-12 lg:px-24 bg-gradient-to-r from-primary to-secondary text-white">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               지금 바로 트렌드맵을 시작하세요
@@ -200,7 +204,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
                   href="/dashboard"
-                  className="px-8 py-4 bg-white text-primary-DEFAULT rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl"
+                  className="px-8 py-4 bg-white text-primary rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl"
               >
                 무료로 시작하기
               </Link>
