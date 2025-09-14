@@ -1,9 +1,14 @@
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/components/common/Logo";
 import {ChartIcon, CircleChartIcon, DocumentCheckIcon} from "@/components/icons";
+import { useSidebar } from "@/contexts/SidebarContext";
 
 export default function Home() {
+  const { isCollapsed } = useSidebar();
+
   return (
       <div className="min-h-screen bg-radial-gradient text-white w-full">
         {/* Hero Section */}
@@ -65,6 +70,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Features Section */}
         <section className="py-16 px-6 md:px-12 lg:px-24 bg-black/30">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">
@@ -74,7 +80,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Feature 1 - 일별 트렌드 랭킹 */}
               <div className="bg-gray-700/10 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100/10 flex flex-col items-center justify-center">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary-light to-primary-dark/70"></div>
                   <ChartIcon />
                 </div>
@@ -86,7 +92,7 @@ export default function Home() {
 
               {/* Feature 2 - 키워드 분석 */}
               <div className="bg-gray-700/10 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100/10 flex flex-col items-center justify-center">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-secondary-light to-secondary-dark/70"></div>
                   <DocumentCheckIcon />
                 </div>
@@ -98,7 +104,7 @@ export default function Home() {
 
               {/* Feature 3 - 맞춤형 대시보드 */}
               <div className="bg-gray-700/10 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100/10 flex flex-col items-center justify-center">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary-light to-primary-dark/70"></div>
                   <CircleChartIcon />
                 </div>
@@ -111,10 +117,9 @@ export default function Home() {
           </div>
         </section>
 
-
         {/* Platforms Section */}
         <section className="py-16 px-6 md:px-12 lg:px-24">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto flex flex-col items-center justify-center">
             <h2 className="text-3xl font-bold text-center mb-4">
               다양한 플랫폼의 트렌드를 한곳에서
             </h2>
@@ -122,24 +127,63 @@ export default function Home() {
               글로벌/국내 주요 플랫폼의 데이터를 수집하여 가장 정확하고 신선한 트렌드 정보를 제공합니다.
             </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-              {/* Platform logos */}
-              {['YouTube', 'Reddit', 'Twitter', 'Google', 'Naver', 'Instagram'].map((platform) => (
-                  <div key={platform} className="bg-black/40 backdrop-blur-sm p-4 rounded-lg shadow flex items-center justify-center hover:shadow-md transition-shadow border border-gray-700/50">
-                    <div className="text-center">
-                      <div className="w-12 h-12 mx-auto mb-2 flex items-center justify-center">
-                        <Image
-                            src={`/images/platforms/${platform.toLowerCase()}.svg`}
-                            alt={`${platform} 로고`}
-                            width={40}
-                            height={40}
-                            className="object-contain"
-                        />
+            {/* 슬라이드 컨테이너 */}
+            <div className={`relative overflow-hidden bg-black/30 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 rounded-2xl
+              ${isCollapsed ? 'w-[calc(100lvw-18rem)] md:w-[calc(100lvw-18rem)] lg:w-[calc(100lvw-18rem)]' : 'w-[calc(100lvw-28rem)] md:w-[calc(100lvw-28rem)] lg:w-[calc(100lvw-28rem)]'}
+                `}>
+              {/* 그라데이션 마스크 - 좌우 페이드 효과 */}
+              <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-black/60 to-transparent z-10 pointer-events-none"></div>
+              <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-black/60 to-transparent z-10 pointer-events-none"></div>
+
+              {/* 슬라이드 트랙 */}
+              <div className="flex animate-scroll-left">
+                {/* 첫 번째 세트 */}
+                <div className="flex gap-6 px-3">
+                  {['YouTube', 'Reddit', 'Twitter', 'Google', 'Naver', 'Instagram'].map((platform) => (
+                      <div key={`${platform}-1`} className="flex-shrink-0">
+                        <div className="px-8 pt-7 pb-5 transition-all">
+                          <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-3 flex items-center justify-center">
+                              <Image
+                                  src={`/images/platforms/${platform.toLowerCase()}.svg`}
+                                  alt={`${platform} 로고`}
+                                  width={48}
+                                  height={48}
+                                  className="object-contain"
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm font-medium text-gray-200">{platform}</p>
-                    </div>
-                  </div>
-              ))}
+                  ))}
+                </div>
+
+                {/* 두 번째 세트 (무한 루프를 위한 복제) */}
+                <div className="flex gap-6 px-3">
+                  {['YouTube', 'Reddit', 'Twitter', 'Google', 'Naver', 'Instagram'].map((platform) => (
+                      <div key={`${platform}-2`} className="flex-shrink-0">
+                        <div className="px-8 pt-7 pb-5 transition-all">
+                          <div className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-3 flex items-center justify-center">
+                              <Image
+                                  src={`/images/platforms/${platform.toLowerCase()}.svg`}
+                                  alt={`${platform} 로고`}
+                                  width={48}
+                                  height={48}
+                                  className="object-contain"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 하단 설명 텍스트 */}
+              <p className="text-center text-gray-400 text-sm mb-6 px-10">
+                트렌드맵에서는 위의 모든 플랫폼 및 더 많은 소스로부터 트렌드 데이터를 수집합니다.
+              </p>
             </div>
           </div>
         </section>
