@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format, addDays, subDays } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import DatePicker from '@/components/common/DatePicker';
 import PlatformSelector from '@/components/trend-ranking/PlatformSelector';
@@ -106,6 +106,36 @@ export default function DailyTrendRanking() {
     setSelectedKeyword(null);
   };
 
+  // 이전일로 이동 핸들러
+  const goToPreviousDay = () => {
+    const previousDay = subDays(selectedDate, 1);
+    setSelectedDate(previousDay);
+    setSelectedKeyword(null);
+  };
+
+  // 다음일로 이동 핸들러
+  const goToNextDay = () => {
+    const nextDay = addDays(selectedDate, 1);
+    // 미래 날짜로 이동하지 않도록 제한 (오늘 이후로는 이동 불가)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (nextDay <= today) {
+      setSelectedDate(nextDay);
+      setSelectedKeyword(null);
+    }
+  };
+
+  // 다음일 버튼 비활성화 여부 확인
+  const isNextDayDisabled = () => {
+    const nextDay = addDays(selectedDate, 1);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    nextDay.setHours(0, 0, 0, 0);
+
+    return nextDay > today;
+  };
+
   // 플랫폼 선택 핸들러
   const handlePlatformChange = (platformId: string) => {
     setSelectedPlatform(platformId);
@@ -124,7 +154,16 @@ export default function DailyTrendRanking() {
           </div>
 
           {/* 날짜 섹션 */}
-          <div className="mb-6 text-white w-full flex flex-col items-center justify-center">
+          <div className="mb-6 text-white w-full flex flex-row items-center justify-center gap-2">
+            <button
+                onClick={goToPreviousDay}
+                className="p-2 rounded-full hover:bg-gray-700/30 transition-colors focus:outline-none"
+                aria-label="이전일"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
             <DatePicker
                 selected={selectedDate}
                 onChange={handleDateChange}
@@ -136,8 +175,21 @@ export default function DailyTrendRanking() {
                 placeholder="날짜를 선택하세요"
                 dateFormat="yyyy년 MM월 dd일"
             />
+            <button
+                onClick={goToNextDay}
+                disabled={isNextDayDisabled()}
+                className={`p-2 rounded-full transition-colors focus:outline-none ${
+                    isNextDayDisabled()
+                        ? 'text-gray-500 cursor-not-allowed'
+                        : 'hover:bg-gray-700/30'
+                }`}
+                aria-label="다음일"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
           </div>
-
           {/* 필터 섹션 */}
           <div className="bg-black/30 backdrop-blur-sm border border-gray-700/50 rounded-xl pt-4 pb-6 pr-6 pl-6 mb-4">
             <div className="flex-grow">
@@ -149,14 +201,12 @@ export default function DailyTrendRanking() {
               />
             </div>
           </div>
-
           {/* 트렌드 테이블 */}
           <div className="bg-black/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 mb-8">
             <h2 className="text-xl font-semibold mb-4 flex items-center">
               <span className="w-3 h-3 bg-primary-400 rounded-full mr-2"></span>
               인기 검색어 TOP 50
             </h2>
-
             <TrendTable
                 data={trendData}
                 isLoading={isLoading}
