@@ -4,6 +4,7 @@ import './globals.css';
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Sidebar from "@/components/sidebar/Sidebar";
+import MainContent from "@/components/layout/MainContent";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -44,9 +45,9 @@ export default function RootLayout({
             <SidebarProvider>
                 <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
                     <Sidebar />
-                    <main className="flex-1 md:ml-64 transition-all duration-300 ease-in-out">
+                    <MainContent>
                         {children}
-                    </main>
+                    </MainContent>
                 </div>
             </SidebarProvider>
         </ThemeProvider>

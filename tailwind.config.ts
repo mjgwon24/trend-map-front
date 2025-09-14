@@ -11,6 +11,9 @@ const config: Config = {
   darkMode: 'class',
   theme: {
     extend: {
+      backgroundImage: {
+        'radial-gradient': 'radial-gradient(circle, #412829 0%, #221C1D 50%, #191616 100%)',
+      },
       colors: generateTailwindColors(colors),
     },
   },

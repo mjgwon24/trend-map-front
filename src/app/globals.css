@@ -38,3 +38,22 @@ body {
   font-family: 'DaeguCatholicUniversity', sans-serif;
   letter-spacing: 0.5px;
 }
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 15s linear infinite;
+  will-change: transform;
+}
+
+/* 호버 시 애니메이션 일시정지 */
+.animate-scroll-left:hover {
+  animation-play-state: paused;
+}
