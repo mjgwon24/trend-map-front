@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/components/common/Logo";
-import {ChartIcon, CircleChartIcon, DocumentCheckIcon} from "@/components/icons";
+import { ChartIcon, CircleChartIcon, DocumentCheckIcon } from "@/components/icons";
 import { useSidebar } from "@/contexts/SidebarContext";
 
 export default function Home() {
@@ -192,38 +192,59 @@ export default function Home() {
         <section className="py-16 px-6 md:px-12 lg:px-24 bg-black/30">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">
-              이런 분들에게 <span className="text-primary">추천</span>합니다
+              이런 분들에게 추천합니다
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* User Type 1 */}
-              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
-                <h3 className="text-xl font-bold mb-4 flex items-center">
-                  <span className="w-8 h-8 bg-primary-light/20 rounded-full flex items-center justify-center mr-2 text-primary">1</span>
-                  창업·마케팅·콘텐츠 기획자
-                </h3>
+              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50 flex flex-col justify-center items-center">
+                <span className="w-20 h-20 md:w-24 md:h-24 bg-primary-light/20 rounded-full flex items-center justify-center mb-5">
+                    <Image
+                        src="/images/people/pink_hair_female.svg"
+                        alt="콘텐츠 기획자"
+                        width={64}
+                        height={64}
+                        className="object-contain w-16 h-16 md:w-20 md:h-20"
+                    />
+                  </span>
+
+                <h3 className="text-xl font-bold mb-4 flex items-center">창업·마케팅·콘텐츠 기획자</h3>
                 <p className="text-gray-300">
                   최신 트렌드를 파악하여 콘텐츠 기획과 마케팅 전략 수립에 활용할 수 있습니다.
                 </p>
               </div>
 
               {/* User Type 2 */}
-              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
-                <h3 className="text-xl font-bold mb-4 flex items-center">
-                  <span className="w-8 h-8 bg-secondary-light/20 rounded-full flex items-center justify-center mr-2 text-secondary">2</span>
-                  트렌드에 민감한 일반인
-                </h3>
+              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50 flex flex-col justify-center items-center">
+                <span className="w-20 h-20 md:w-24 md:h-24 bg-secondary-light/20 rounded-full flex items-center justify-center mb-5">
+                    <Image
+                        src="/images/people/normal_female.svg"
+                        alt="콘텐츠 기획자"
+                        width={58}
+                        height={58}
+                        className="object-contain w-16 h-16 md:w-20 md:h-20"
+                    />
+                  </span>
+
+                <h3 className="text-xl font-bold mb-4 flex items-center">트렌드에 민감한 일반인</h3>
                 <p className="text-gray-300">
                   매일 업데이트되는 인기 키워드와 이슈를 쉽고 빠르게 파악할 수 있습니다.
                 </p>
               </div>
 
               {/* User Type 3 */}
-              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50">
-                <h3 className="text-xl font-bold mb-4 flex items-center">
-                  <span className="w-8 h-8 bg-primary-light/20 rounded-full flex items-center justify-center mr-2 text-primary">3</span>
-                  투자자·리서처
-                </h3>
+              <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-700/50 flex flex-col justify-center items-center">
+                <span className="w-20 h-20 md:w-24 md:h-24 bg-primary-light/20 rounded-full flex items-center justify-center mb-5">
+                    <Image
+                        src="/images/people/office_worker_male.svg"
+                        alt="콘텐츠 기획자"
+                        width={62}
+                        height={62}
+                        className="object-contain w-16 h-16 md:w-20 md:h-20"
+                    />
+                  </span>
+
+                <h3 className="text-xl font-bold mb-4 flex items-center ">투자자·리서처</h3>
                 <p className="text-gray-300">
                   시장 트렌드를 분석하여 투자 결정과 시장 조사에 필요한 인사이트를 얻을 수 있습니다.
                 </p>
